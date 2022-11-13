@@ -4,6 +4,8 @@
 #include "CMPlayer.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/PawnMovementComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 ACMPlayer::ACMPlayer()
@@ -15,6 +17,8 @@ ACMPlayer::ACMPlayer()
 	SpringArmComp->SetupAttachment(RootComponent);
 	SpringArmComp->bUsePawnControlRotation = true;
 
+	GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
+
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(SpringArmComp);
 }
@@ -23,7 +27,7 @@ ACMPlayer::ACMPlayer()
 void ACMPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	GetCharacterMovement()->MaxWalkSpeed = walkingSpeed;
 }
 
 // Called every frame
@@ -44,6 +48,14 @@ void ACMPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("LookUp", this, &ACMPlayer::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("TurnRight", this, &ACMPlayer::AddControllerYawInput);
 
+	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ACMPlayer::BeginCrouch);
+	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ACMPlayer::EndCrouch);
+
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ACMPlayer::BeginSprint);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ACMPlayer::EndSprint);
+
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+
 }
 
 void ACMPlayer::MoveForward(float value)
@@ -54,5 +66,25 @@ void ACMPlayer::MoveForward(float value)
 void ACMPlayer::MoveRight(float value)
 {
 	AddMovementInput(GetActorRightVector() * value);
+}
+
+void ACMPlayer::BeginCrouch()
+{
+	Crouch();
+}
+
+void ACMPlayer::EndCrouch()
+{
+	UnCrouch();
+}
+
+void ACMPlayer::BeginSprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed = runningSpeed;
+}
+
+void ACMPlayer::EndSprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed = walkingSpeed;
 }
 

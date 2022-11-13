@@ -24,11 +24,20 @@ protected:
 
 	void MoveForward(float value);
 	void MoveRight(float value);
+	void BeginCrouch();;
+	void EndCrouch();
+	void BeginSprint();
+	void EndSprint();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UCameraComponent* CameraComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USpringArmComponent* SpringArmComp;
+
+	UPROPERTY(EditAnywhere)
+	float walkingSpeed = 200.0f;
+	UPROPERTY(EditAnywhere)
+	float runningSpeed = 400.0f;
 
 public:	
 	// Called every frame
