@@ -58,6 +58,15 @@ void ACMPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+FVector ACMPlayer::GetPawnViewLocation() const
+{
+	if (CameraComp)
+	{
+		return CameraComp->GetComponentLocation();
+	}
+	return Super::GetPawnViewLocation();
+}
+
 void ACMPlayer::MoveForward(float value)
 {
 	AddMovementInput(GetActorForwardVector() * value);
