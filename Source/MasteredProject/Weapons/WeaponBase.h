@@ -7,6 +7,8 @@
 #include "WeaponBase.generated.h"
 
 class USkeletalMeshComponent;
+class UDamageType;
+class UParticleSystem;
 
 UCLASS()
 class MASTEREDPROJECT_API AWeaponBase : public AActor
@@ -27,6 +29,17 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "weapon")
 	void Fire();
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "weapon")
+	TSubclassOf<UDamageType> DamageType;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "weapon")
+	FName MuzzleSocketName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "weapon")
+	UParticleSystem* MuzzleEffect;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "weapon")
+	UParticleSystem* ImpactEffect;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
