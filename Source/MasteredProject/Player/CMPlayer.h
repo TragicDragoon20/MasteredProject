@@ -8,6 +8,8 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class UHealthComponent;
+class AWeaponBase;
 
 UCLASS()
 class MASTEREDPROJECT_API ACMPlayer : public ACharacter
@@ -33,11 +35,29 @@ protected:
 	UCameraComponent* CameraComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USpringArmComponent* SpringArmComp;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UHealthComponent* HealthComp;
 
 	UPROPERTY(EditAnywhere)
 	float walkingSpeed = 200.0f;
 	UPROPERTY(EditAnywhere)
 	float runningSpeed = 400.0f;
+
+	AWeaponBase* CurrentWeapon;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Player")
+	TSubclassOf<AWeaponBase> StarterWeapon;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
+	FName WeaponAttachSocketName;
+
+	void Fire();
+
+	UFUNCTION()
+	void OnHealthChanged(UHealthComponent* HealthCompo, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Player")
+	bool bDied;
 
 public:	
 	// Called every frame
