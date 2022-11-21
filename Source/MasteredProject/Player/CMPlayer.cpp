@@ -51,11 +51,20 @@ void ACMPlayer::BeginPlay()
 	HealthComp->OnHealthChanged.AddDynamic(this, &ACMPlayer::OnHealthChanged);
 }
 
-void ACMPlayer::Fire()
+void ACMPlayer::StartFire()
 {
 	if (CurrentWeapon)
 	{
+		bShooting = true;
 		CurrentWeapon->Fire();
+	}
+}
+
+void ACMPlayer::EndFire()
+{
+	if (CurrentWeapon)
+	{
+		bShooting = false;
 	}
 }
 
@@ -100,7 +109,8 @@ void ACMPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ACMPlayer::Fire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ACMPlayer::StartFire);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ACMPlayer::EndFire);
 
 }
 

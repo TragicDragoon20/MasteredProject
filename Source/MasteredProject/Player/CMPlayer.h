@@ -51,13 +51,17 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
 	FName WeaponAttachSocketName;
 
-	void Fire();
+	void StartFire();
+	void EndFire();
 
 	UFUNCTION()
 	void OnHealthChanged(UHealthComponent* HealthCompo, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	UPROPERTY(BlueprintReadOnly, Category = "Player")
 	bool bDied;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Player")
+	bool bShooting;
 
 public:	
 	// Called every frame

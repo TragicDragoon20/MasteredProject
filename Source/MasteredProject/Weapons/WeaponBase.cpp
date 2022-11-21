@@ -7,6 +7,11 @@
 #include "Particles/ParticleSystem.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "PhysicalMaterials/PhysicalMaterial.h"
+#include "../MasteredProject.h"
+
+
+
 
 static int32 DebugWeaponDrawing = 0;
 FAutoConsoleVariableRef CVARDebugWeaponDrawing(
@@ -43,6 +48,7 @@ void AWeaponBase::Fire()
 		FCollisionQueryParams QuerryParams;
 		QuerryParams.AddIgnoredActor(MyOwner);
 		QuerryParams.AddIgnoredActor(this);	
+		QuerryParams.bReturnPhysicalMaterial = true;
 		QuerryParams.bTraceComplex = true;
 
 		FVector TraceEndPoint = TraceEnd;
@@ -54,9 +60,24 @@ void AWeaponBase::Fire()
 
 			UGameplayStatics::ApplyPointDamage(HitActor, 20.0f, ShotDirection, Hit, MyOwner->GetInstigatorController(), this, DamageType);
 
-			if (ImpactEffect)
+			EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
+
+			UParticleSystem* SelectedEffect = nullptr;
+
+			switch (SurfaceType)
 			{
-				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
+			case SURFACE_FLESHDEFAULT:
+			case SURFACE_FLESHVULNERABLE:
+				SelectedEffect = FleshImpactEffect;
+				break;
+			default:
+				SelectedEffect = DefaultImpactEffect;
+				break;
+			}
+
+			if (SelectedEffect)
+			{
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SelectedEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
 			}
 
 			TraceEndPoint = Hit.ImpactPoint;
@@ -86,6 +107,16 @@ void AWeaponBase::PlayFireEffects(FVector TraceEndPoint)
 		if (TracerComp)
 		{
 			TracerComp->SetVectorParameter(TracerTargetName, TraceEndPoint);
+		}
+	}
+
+	APawn* MyOwner = Cast<APawn>(GetOwner());
+	if (MyOwner)
+	{
+		APlayerController* PC = Cast<APlayerController>(MyOwner->GetController());
+		if (PC)
+		{
+			PC->ClientStartCameraShake(FireCameraShake);
 		}
 	}
 }

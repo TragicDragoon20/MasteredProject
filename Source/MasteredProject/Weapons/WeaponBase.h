@@ -9,6 +9,7 @@
 class USkeletalMeshComponent;
 class UDamageType;
 class UParticleSystem;
+class UCameraShakeBase;
 
 UCLASS()
 class MASTEREDPROJECT_API AWeaponBase : public AActor
@@ -39,10 +40,16 @@ protected:
 	UParticleSystem* MuzzleEffect;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "weapon")
-	UParticleSystem* ImpactEffect;
+	UParticleSystem* DefaultImpactEffect;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "weapon")
+		UParticleSystem* FleshImpactEffect;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "weapon")
 	UParticleSystem* TracerEffect;
+
+	UPROPERTY(EditDefaultsOnly, Category = "weapon")
+	TSubclassOf<UCameraShakeBase> FireCameraShake;
 public:	
 
 	UFUNCTION(BlueprintCallable, Category = "weapon")
