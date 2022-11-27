@@ -3,6 +3,8 @@
 
 #include "EnemyBase.h"
 #include "Components/StaticMeshComponent.h"
+#include "../Player/HealthComponent.h"
+
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -13,6 +15,8 @@ AEnemyBase::AEnemyBase()
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
 	MeshComp->SetCanEverAffectNavigation(false);
 	RootComponent = MeshComp;
+
+	HealthComp = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComp"));
 }
 
 // Called when the game starts or when spawned
@@ -20,6 +24,13 @@ void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	HealthComp->OnHealthChanged.AddDynamic(this, &AEnemyBase::HandleTakeDamage);
+
+}
+
+void AEnemyBase::HandleTakeDamage(UHealthComponent* HealthCompo, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+	UE_LOG(LogTemp, Log, TEXT("Health %s of %s"), *FString::SanitizeFloat(Health), *GetName());
 }
 
 // Called every frame

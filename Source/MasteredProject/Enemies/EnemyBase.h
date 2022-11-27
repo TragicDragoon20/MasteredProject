@@ -6,6 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "EnemyBase.generated.h"
 
+class UHealthComponent;
 UCLASS()
 class MASTEREDPROJECT_API AEnemyBase : public APawn
 {
@@ -21,6 +22,12 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	UStaticMeshComponent* MeshComp;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Components")
+	UHealthComponent* HealthComp;
+
+	UFUNCTION()
+	void HandleTakeDamage(UHealthComponent* HealthCompo, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 public:	
 	// Called every frame
