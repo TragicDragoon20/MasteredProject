@@ -24,6 +24,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USphereComponent* SphereComp;
 
+	UPROPERTY(EditDefaultsOnly, Category = "PickUp")
+	TSubclassOf<AActor> PickUpObject;
+
+	AActor* PickUpInstance;
+
+	void SpawnItem();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
