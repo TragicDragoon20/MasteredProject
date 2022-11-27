@@ -56,7 +56,7 @@ void ACMPlayer::StartFire()
 	if (CurrentWeapon)
 	{
 		bShooting = true;
-		CurrentWeapon->Fire();
+		CurrentWeapon->StartFire();
 	}
 }
 
@@ -64,6 +64,7 @@ void ACMPlayer::EndFire()
 {
 	if (CurrentWeapon)
 	{
+		CurrentWeapon->EndFire();
 		bShooting = false;
 	}
 }

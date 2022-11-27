@@ -9,6 +9,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
 #include "../MasteredProject.h"
+#include "TimerManager.h"
 
 
 
@@ -30,6 +31,15 @@ AWeaponBase::AWeaponBase()
 
 	MuzzleSocketName = "MuzzleSocket";
 	TracerTargetName = "Target";
+
+	RateOfFire = 600;
+}
+
+void AWeaponBase::BeginPlay()
+{
+	Super::BeginPlay();
+
+	TimeBetweenShots = 60 / RateOfFire;
 }
 
 void AWeaponBase::Fire()
@@ -89,7 +99,21 @@ void AWeaponBase::Fire()
 		}
 
 		PlayFireEffects(TraceEndPoint);
+
+		LastFireTime = GetWorld()->TimeSeconds;
 	}
+}
+
+void AWeaponBase::StartFire()
+{
+	float firstDelay = FMath::Max(LastFireTime + TimeBetweenShots - GetWorld()->TimeSeconds, 0.0f);
+
+	GetWorldTimerManager().SetTimer(TimerHandle_TimeBetweenShots, this, &AWeaponBase::Fire, TimeBetweenShots, true, firstDelay);
+}
+
+void AWeaponBase::EndFire()
+{
+	GetWorldTimerManager().ClearTimer(TimerHandle_TimeBetweenShots);
 }
 
 void AWeaponBase::PlayFireEffects(FVector TraceEndPoint)
