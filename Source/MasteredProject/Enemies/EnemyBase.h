@@ -7,6 +7,7 @@
 #include "EnemyBase.generated.h"
 
 class UHealthComponent;
+class USkeletalMeshComponent;
 UCLASS()
 class MASTEREDPROJECT_API AEnemyBase : public APawn
 {
@@ -21,7 +22,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
-	UStaticMeshComponent* MeshComp;
+	USkeletalMeshComponent* MeshComp;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	UHealthComponent* HealthComp;

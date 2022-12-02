@@ -55,12 +55,20 @@ protected:
 
 	void Fire();
 
+
 	FTimerHandle TimerHandle_TimeBetweenShots;
 
 	float LastFireTime;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "weapon")
 	float RateOfFire;
+
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "weapon")
+	float BulletSpread;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "weapon")
+	float BaseDamage;
 
 	float TimeBetweenShots;
 

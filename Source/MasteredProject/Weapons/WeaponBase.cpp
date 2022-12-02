@@ -33,6 +33,8 @@ AWeaponBase::AWeaponBase()
 	TracerTargetName = "Target";
 
 	RateOfFire = 600;
+	BaseDamage = 20.0f;
+	BulletSpread = 2.0f;
 }
 
 void AWeaponBase::BeginPlay()
@@ -53,6 +55,9 @@ void AWeaponBase::Fire()
 
 		FVector ShotDirection = EyeRotation.Vector();
 
+		float HalfRad = FMath::DegreesToRadians(BulletSpread);
+		ShotDirection = FMath::VRandCone(ShotDirection, HalfRad, HalfRad);
+
 		FVector TraceEnd = EyeLocation + (ShotDirection * 10000);
 
 		FCollisionQueryParams QuerryParams;
@@ -68,7 +73,7 @@ void AWeaponBase::Fire()
 		{
 			AActor* HitActor = Hit.GetActor();
 
-			UGameplayStatics::ApplyPointDamage(HitActor, 20.0f, ShotDirection, Hit, MyOwner->GetInstigatorController(), this, DamageType);
+			UGameplayStatics::ApplyPointDamage(HitActor, BaseDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(), this, DamageType);
 
 			EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
 
